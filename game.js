@@ -3,7 +3,7 @@ function Game(components) {
   this.player = components.player;
   this.master = components.master;
   this.boardView = components.boardView;
-  this.playerTurn = true;
+  // this.playerTurn = true;
   this.gameOver = false;
   this.moves = 0;
 }
@@ -14,23 +14,21 @@ Game.prototype = {
     $("#game").on('click', 'td', function() {
       var coords = game.coordsToArr(this.id);
       var squareEmpty = game.board.checkIfEmpty(coords);
-      // console.log(squareEmpty)
-      if (game.playerTurn && !game.gameOver) {
+      if (!game.gameOver && squareEmpty) {
         game.moves += 1;
-        game.playerTurn = false;
+        // game.playerTurn = false;
         game.board.updateSquares(coords, "player")
         game.boardView.showPlayerMove(this);
-        game.move();
-      };
+        game.moveMaster();
+      }
     });
   },
 
-  move: function() {
-    var masterMoveCoords = this.master.move(this.board.squares);
-    if (masterMoveCoords) {masterMoveCoords = masterMoveCoords.join('')}
+  moveMaster: function() {
+    var masterMoveCoords = this.master.move(this.board.squares).join('');
     this.board.updateSquares(this.coordsToArr(masterMoveCoords), "master")
     this.boardView.showMasterMove(masterMoveCoords);
-    this.playerTurn = true;
+    // this.playerTurn = true;
   },
 
   checkWinner: function() {
