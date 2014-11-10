@@ -87,23 +87,69 @@ Master.prototype = {
   },
 
   checkDiagonals: function(squares) {
-    for (var key in squares) {
-      if (key[0] % 2 !== 0 && key[2] % 2 !== 0) {
-        if (squares[key] === squares[[2,2]] && !squares[[[4-key[0], 4-key[2]]]]) {
-          return [4-key[0], 4-key[2]]
-        } else if (!squares[[2,2]]) {
-          return [2,2]
+    var middle;
+    var master = this;
+    var coords;
+    if (squares[[2,2]]) {
+      middle = squares[[2,2]];
+      var corners = this.corners();
+      for (i in corners) {
+        if (squares[corners[i]] === middle && !squares[master.oppositeCorner(corners[i])]) {
+          coords = master.oppositeCorner(corners[i]);
+          return coords;
+        } else if (squares[corners[i]] && (squares[corners[i]] === squares[master.oppositeCorner(corners[i])])) {
+          coords = master.findOpenSide(squares);
+        } else {
         }
+      }
+    } else {
+      coords = [2,2]
+    }
+    return coords;
+  },
+
+  corners: function() {
+    arr = []
+    for (var r = 1; r <= 3; r+=2) {
+      for (var c = 1; c <= 3; c+=2) {
+        arr.push([r,c])
+      }
+    }
+    return arr;
+  },
+
+  sides: function() {
+    arr = []
+    for (var r = 1; r <= 3; r++) {
+      for (var c = 1; c <= 3; c++) {
+        if ((r % 2 === 0 || c % 2 === 0) && !(r % 2 === 0 && c % 2 === 0 )) {
+          arr.push([r,c])
+        }
+      }
+    }
+    return arr;
+  },
+
+  oppositeCorner: function(coords) {
+    return [4-coords[0], 4-coords[1]]
+  },
+
+  findOpenCorner: function(squares) {
+    var coords;
+    var corners = this.corners();
+    for (i in corners) {
+      if (!squares[corners[i]]) {
+        return corners[i]
       }
     }
   },
 
-  findOpenCorner: function(squares) {
-    for (var r = 1; r <= 3; r+=2) {
-      for (var c = 1; c <= 3; c+=2) {
-        if (!squares[[r,c]]) {
-          return [r,c]
-        }
+  findOpenSide: function(squares) {
+    var coords;
+    var sides = this.sides();
+    for (i in sides) {
+      if (!squares[sides[i]]) {
+        return sides[i]
       }
     }
   },
