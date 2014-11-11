@@ -13,32 +13,37 @@ function BoardView() {
 
 BoardView.prototype = {
   showPlayerMove: function(clicked) {
-    $(clicked).html("<i class = 'player fa fa-times fa-3x'></i>");
+    $(clicked).html("<i class = 'player fa fa-times fa-4x'></i>");
   },
   showMasterMove: function(coords) {
     var square = $(this.table).find("#"+coords)
-    $(square).html("<i class = 'master fa fa-circle-o fa-3x'></i>").fadeIn("slow");
+    $(square).html("<i class = 'master fa fa-circle-o fa-4x'></i>").fadeIn("slow");
   },
   showWinningLocation: function(params) {
     var board = this;
     var winningStripe = this.getWinningArr(params)
     $.each(winningStripe, function(index, value) {
-      $(board.table).find("#"+value).addClass('win-cell');
+      $(board.table).find("#"+value).addClass('win-square');
     });
   },
-
   getWinningArr: function(params) {
-    console.log(params)
+    var type = params['orientation']
+    var place = params['number']
     var arr = []
     var id
-    if (params['orientation'] === 'row') {
+    if (type === 'row') {
       for (var i = 1; i <=3; i++) {
-        id = params['number']+i
+        id = place+i
         arr.push(id)
       }
-    } else if (params['orientation'] === 'col') {
+    } else if (type === 'col') {
       for (var i = 1; i <=3; i++) {
-        id = i+params['number']
+        id = i+place
+        arr.push(id)
+      }
+    } else if (type === 'diag') {
+      for (var i = 1; i <=3; i++) {
+        id = i+String(place+(i-1)*(2-place))
         arr.push(id)
       }
     }
@@ -48,8 +53,18 @@ BoardView.prototype = {
     var capitalizeWinner = winner.charAt(0).toUpperCase() + winner.slice(1);
     $("#game").append("<div class = 'winner'>"+capitalizeWinner+" wins!</div>")
   },
-  
   showDraw: function() {
-    $("#game").append("<div class = 'winner'> Draw!</div>")
+    $("#game").append("<div class = 'winner'>Draw!</div>")
+  },
+  showPlayButton: function() {
+    $(".winner").append("<div class = 'again'>Again?</div>")
+
+  },
+  clearBoard: function() {
+    $(".winner").remove();
+    $(".master").remove();
+    $(".player").remove();
+    $(this.table).find("td").removeClass("win-square");
+
   }
 }

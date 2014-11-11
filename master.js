@@ -1,26 +1,24 @@
 function Master() {}
 
 Master.prototype = {
+
   move: function(squares) {
-    var rows = this.checkRows(squares)
-    var columns = this.checkColumns(squares)
-    var diagonals = this.checkDiagonals(squares)
-    var openCorners = this.findOpenCorner(squares)
-    var lastSquare = this.findLastSquare(squares)
-    if (rows) {
-      return rows
-    } else if (columns) {
-      return columns
-    } else if (diagonals) {
-      return diagonals
-    } else if (openCorners) {
-      return openCorners
-    } else {
-      return lastSquare
+    var moveFunctions = [
+      this.checkRows,
+      this.checkColumns,
+      this.checkDiagonals,
+      this.checkOppositeCorners,
+      this.checkDangerCorners,
+      this.findOpenCorner,
+      this.findOpenSquare
+    ];
+    for (var i in moveFunctions) {
+      if (moveFunctions[i].call(this, squares)) {
+        return moveFunctions[i].call(this, squares);
+      }
     }
   },
-
-  findLastSquare: function(squares) {
+  findOpenSquare: function(squares) {
     for (var r = 1; r <= 3; r++) {
       for (var c = 1; c <= 3; c++) {
         if (!squares[[r,c]]) {
@@ -29,7 +27,6 @@ Master.prototype = {
       }
     }
   },
-
   checkRows: function(squares) {
     var rows = {}
     for (var r = 1; r <= 3; r++) {
@@ -57,7 +54,6 @@ Master.prototype = {
       return [tempKey, missingRow]
     }
   },
-
   checkColumns: function(squares) {
     var cols = {}
     for (var c = 1; c <= 3; c++) {
@@ -85,21 +81,30 @@ Master.prototype = {
       return [missingRow, tempKey]
     }
   },
-
+  checkDangerCorners: function(squares) {
+    var corners = this.corners();
+    for (var i in corners) {
+      if (squares[[2,2]] && squares[corners[i]] && !squares[this.oppositeCorner(corners[i])]) {
+        return this.oppositeCorner(corners[i])
+      }
+    }
+  },
+  checkOppositeCorners: function(squares) {
+    var corners = this.corners();
+    for (var i in corners) {
+      if (squares[corners[i]] && squares[corners[i]] === squares[this.oppositeCorner(corners[i])]) {
+        return this.findOpenSide(squares)
+      }
+    }
+  },
   checkDiagonals: function(squares) {
-    var middle;
-    var master = this;
     var coords;
     if (squares[[2,2]]) {
-      middle = squares[[2,2]];
       var corners = this.corners();
-      for (i in corners) {
-        if (squares[corners[i]] === middle && !squares[master.oppositeCorner(corners[i])]) {
-          coords = master.oppositeCorner(corners[i]);
+      for (var i in corners) {
+        if (squares[corners[i]] === squares[[2,2]] && !squares[this.oppositeCorner(corners[i])]) {
+          coords = this.oppositeCorner(corners[i]);
           return coords;
-        } else if (squares[corners[i]] && (squares[corners[i]] === squares[master.oppositeCorner(corners[i])])) {
-          coords = master.findOpenSide(squares);
-        } else {
         }
       }
     } else {
@@ -107,7 +112,6 @@ Master.prototype = {
     }
     return coords;
   },
-
   corners: function() {
     arr = []
     for (var r = 1; r <= 3; r+=2) {
@@ -117,7 +121,6 @@ Master.prototype = {
     }
     return arr;
   },
-
   sides: function() {
     arr = []
     for (var r = 1; r <= 3; r++) {
@@ -133,27 +136,24 @@ Master.prototype = {
   oppositeCorner: function(coords) {
     return [4-coords[0], 4-coords[1]]
   },
-
   findOpenCorner: function(squares) {
     var coords;
     var corners = this.corners();
-    for (i in corners) {
+    for (var i in corners) {
       if (!squares[corners[i]]) {
         return corners[i]
       }
     }
   },
-
   findOpenSide: function(squares) {
     var coords;
     var sides = this.sides();
-    for (i in sides) {
+    for (var i in sides) {
       if (!squares[sides[i]]) {
         return sides[i]
       }
     }
   },
-
   findMissingCoord: function(arr) {
     return [1,2,3].filter(function(n) {
       return arr.indexOf(n) < 0
