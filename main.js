@@ -1,10 +1,6 @@
 $(function() {
-  var gameComponents = {
-    board: new Board(),
-    player: new Player(),
-    master: new Master(),
-    boardView: new BoardView()
-  }
-  var game = new Game(gameComponents);
-  game.play();
+  var board =  new Board()
+  var master = new Master(board)
+  var boardView = new BoardView()
+  new Game({board: board, master: master, boardView: boardView}).play();
 });
