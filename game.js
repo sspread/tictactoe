@@ -1,5 +1,4 @@
 function Game(components) {
-  console.log(components)
   this.board = components.board;
   this.master = components.master;
   this.boardView = components.boardView;
@@ -11,6 +10,7 @@ Game.prototype = {
   play: function() {
     var game = this;
     $("#game").on('click', 'td', function() {
+      console.log(game.board.squares)
       var coords = game.coordsToArr(this.id);
       var squareEmpty = game.board.checkIfEmpty(coords);
       if (!game.gameOver && game.playerTurn && squareEmpty) {
@@ -32,12 +32,13 @@ Game.prototype = {
     this.playerTurn = true;
     this.gameOver = false;
     this.moves = 0;
-    this.boardView.clearBoard();
+    this.boardView.renderNew();
     this.board.clearSquares();
   },
   moveMaster: function() {
     if (!this.gameOver) {
       var masterMoveCoords = this.master.move(this.board.squares).join('');
+      console.log(masterMoveCoords)
       this.board.updateSquares(this.coordsToArr(masterMoveCoords), "master");
       this.boardView.showMasterMove(masterMoveCoords);
       this.moves += 1;

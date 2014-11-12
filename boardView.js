@@ -1,30 +1,32 @@
 function BoardView() {
-  var table, r, c, squareId;
-  table = $.parseHTML("<table id = 'board'></table>");
-  this.table = table[0];
-  $("#game").append(table);
-  for (r = 1; r <= 3; r++) {
-    $(table).append("<tr></tr>");
-    for (c = 1; c <= 3; c++) {
-      squareId = String(r)+String(c);
-      $(table).children('tbody').children('tr:last-child').append('<td id = '+squareId+'></td>');
-    }
-  }
+  this.el = $("#game")
 }
 
 BoardView.prototype = {
+  renderNew: function() {
+    var table, r, c, squareId;
+    table = $.parseHTML("<table id = 'board'></table>")[0];
+    this.el.html(table);
+    for (r = 1; r <= 3; r++) {
+      $(table).append("<tr></tr>");
+      for (c = 1; c <= 3; c++) {
+        squareId = String(r)+String(c);
+        this.el.find('tr:last-child').append('<td id = '+squareId+'></td>');
+      }
+    }
+  },
   showPlayerMove: function(clicked) {
     $(clicked).html("<i class = 'player fa fa-times fa-4x'></i>");
   },
   showMasterMove: function(coords) {
-    var square = $(this.table).find("#"+coords);
-    $(square).html("<i class = 'master fa fa-circle-o fa-4x'></i>").fadeIn("slow");
+    var square = $(this.el).find("#"+coords);
+    $(square).html("<i class = 'master fa fa-circle-o fa-4x'></i>");
   },
   showWinningLocation: function(params) {
     var board = this,
     winningStripe = this.getWinningArr(params);
     $.each(winningStripe, function(index, value) {
-      $(board.table).find("#"+value).addClass('win-square');
+      $(board.el).find("#"+value).addClass('win-square');
     });
   },
   getWinningArr: function(params) {
@@ -58,12 +60,5 @@ BoardView.prototype = {
   },
   showPlayButton: function() {
     $(".winner").append("<div class = 'again'>Again?</div>");
-
   },
-  clearBoard: function() {
-    $(".winner").remove();
-    $(".master").remove();
-    $(".player").remove();
-    $(this.table).find("td").removeClass("win-square");
-  }
 };
