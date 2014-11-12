@@ -10,7 +10,6 @@ Game.prototype = {
   play: function() {
     var game = this;
     $("#game").on('click', 'td', function() {
-      console.log(game.board.squares)
       var coords = game.coordsToArr(this.id);
       var squareEmpty = game.board.checkIfEmpty(coords);
       if (!game.gameOver && game.playerTurn && squareEmpty) {
@@ -38,7 +37,6 @@ Game.prototype = {
   moveMaster: function() {
     if (!this.gameOver) {
       var masterMoveCoords = this.master.move(this.board.squares).join('');
-      console.log(masterMoveCoords)
       this.board.updateSquares(this.coordsToArr(masterMoveCoords), "master");
       this.boardView.showMasterMove(masterMoveCoords);
       this.moves += 1;

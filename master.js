@@ -17,8 +17,10 @@ Master.prototype = {
       this.findOpenSquare
     ];
     for (i = 0; i < moveFunctions.length; i++) {
-      currentCheck = moveFunctions[i].call(this)
+      currentCheck = moveFunctions[i].call(this);
       if (currentCheck) {
+        console.log(i);
+        console.log(currentCheck)
         return currentCheck;
       }
     }
@@ -105,7 +107,6 @@ Master.prototype = {
   },
   checkDiagonals: function() {
     if (this.squares[[2,2]]) {
-      console.log(this.board)
       var corners = this.board.corners(), i;
       for (i = 0; i < corners.length; i++) {
         if (this.squares[corners[i]] === this.squares[[2,2]] && !this.squares[this.board.oppositeCorner(corners[i])]) {
