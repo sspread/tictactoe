@@ -36,7 +36,7 @@ Master.prototype = {
     }
   },
   checkRows: function() {
-    var rows = {}, r, tempKey, key, missingRow;
+    var rows = {}, r, tempKey, key, missingCol;
     for (r = 1; r <= 3; r++) {
       rows[r] = [];
       for (key in this.squares) {
@@ -49,8 +49,8 @@ Master.prototype = {
       if (rows[key].length === 2) {
         if (this.squares[[key,rows[key][0]]] === this.squares[[key,rows[key][1]]]) {
           if (this.squares[[key,rows[key][0]]] === "master") {
-            missingRow = this.findMissingCoord(rows[key]);
-            return [key, missingRow];
+            missingCol = this.findMissingCoord(rows[key]);
+            return [key, missingCol];
           } else {
             tempKey = key;
           }
@@ -58,8 +58,8 @@ Master.prototype = {
       }
     }
     if (tempKey) {
-      missingRow = this.findMissingCoord(rows[tempKey]);
-      return [tempKey, missingRow];
+      missingCol = this.findMissingCoord(rows[tempKey]);
+      return [tempKey, missingCol];
     }
   },
   checkColumns: function() {
