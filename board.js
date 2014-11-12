@@ -41,6 +41,20 @@ Board.prototype = {
   oppositeCorner: function(coords) {
     return [4-coords[0], 4-coords[1]];
   },
+  getWinningLocation: function(players) {
+    var directions, i;
+    directions = [
+      this.getWinningRow,
+      this.getWinningColumn,
+      this.getWinningDiagonal
+    ];
+    for (i in directions) {
+      if (directions[i].call(this, players)) {
+        return directions[i].call(this, players);
+      }
+    }
+    return false;
+  },
   getWinningRow: function(players) {
     var i, squares, rows, key;
     for (i = 0; i < players.length; i++) {

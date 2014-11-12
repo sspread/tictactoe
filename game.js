@@ -8,31 +8,33 @@ function Game(components) {
 }
 Game.prototype = {
   play: function() {
-    var game = this;
-    $("#game").on('click', 'td', function() {
-      var coords = game.coordsToArr(this.id);
-      var squareEmpty = game.board.checkIfEmpty(coords);
-      if (!game.gameOver && game.playerTurn && squareEmpty) {
-        game.moves += 1;
-        game.playerTurn = false;
-        game.board.updateSquares(coords, "player");
-        game.boardView.showPlayerMove(this);
-        game.checkWinner();
-        setTimeout(function() {
-          game.moveMaster();
-        }, 270);
-      }
-    });
-    $("#game").on('click', '.again', function() {
-      game.resetGame();
-    });
+    this.boardView.el.find('td').on('click', this.movePlayer.bind(this));
+    this.boardView.el.on('click', '.again', this.resetGame.bind(this));
   },
+  movePlayer: function(e) {
+    console.log(this.boardView.el)
+    var coords, squareEmpty;
+    coords = this.coordsToArr(e.delegateTarget.id);
+    squareEmpty = this.board.checkIfEmpty(coords);
+    if (!this.gameOver && this.playerTurn && squareEmpty) {
+      this.moves += 1;
+      this.playerTurn = false;
+      this.board.updateSquares(coords, "player");
+      this.boardView.showPlayerMove(e.delegateTarget);
+      this.checkWinner();
+      setTimeout(function() {
+        this.moveMaster();
+      }.bind(this), 270);
+    }
+  },
+
   resetGame: function() {
+    this.board.clearSquares();
+    this.boardView.renderNew();
     this.playerTurn = true;
     this.gameOver = false;
     this.moves = 0;
-    this.boardView.renderNew();
-    this.board.clearSquares();
+    this.play();
   },
   moveMaster: function() {
     if (!this.gameOver) {
@@ -45,19 +47,26 @@ Game.prototype = {
     this.playerTurn = true;
   },
   checkWinner: function() {
-    var winningLocation = this.getWinningLocation();
+    var winningLocation, parsedLocation, winner;
+    players = ["master", "player"];
+    if (this.moves > 4) {
+      winningLocation = this.board.getWinningLocation(players);
+    }
     if (winningLocation) {
       this.gameOver = true;
-      var parsedLocation = this.parseLocation(winningLocation);
-      var winner = this.board.squares[parsedLocation];
+      parsedLocation = this.parseLocation(winningLocation);
+      winner = this.board.squares[parsedLocation];
       this.boardView.showWinner(winner);
       this.boardView.showWinningLocation(winningLocation);
       this.boardView.showPlayButton();
     } else if (this.moves >= 8) {
-      this.gameOver = true;
-      this.boardView.showDraw();
-      this.boardView.showPlayButton();
+      this.executeDraw();
     }
+  },
+  executeDraw: function() {
+    this.gameOver = true;
+    this.boardView.showDraw();
+    this.boardView.showPlayButton();    
   },
   parseLocation: function(params) {
     var type = params.orientation;
@@ -68,21 +77,7 @@ Game.prototype = {
       return [1, place];
     }
   },
-  getWinningLocation: function() {
-    if (this.moves > 4) {
-      var players = ["master", "player"];
-      var directions = [
-        this.board.getWinningRow,
-        this.board.getWinningColumn,
-        this.board.getWinningDiagonal
-      ];
-      for (var i in directions) {
-        if (directions[i].call(this.board, players)) {
-          return directions[i].call(this.board, players);
-        }
-      }
-    } else return false;
-  },
+
   coordsToArr: function(coordsInt) {
     var arr = String(coordsInt).split('');
     return [parseInt(arr[0]), parseInt(arr[1])];
