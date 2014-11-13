@@ -12,7 +12,6 @@ Board.prototype = {
   },
   updateSquares: function(coords, value) {
     this.squares[coords] = value;
-    console.log(this.squares)
   },
   checkIfEmpty: function(coords) {
     return this.squares[coords] === null
