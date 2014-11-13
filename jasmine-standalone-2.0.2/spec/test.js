@@ -1,13 +1,9 @@
 describe("master", function() {
-  var board =  new Board()
-  board.newSquares();
-  var master = new Master(board)
 
   function MasterTest(board) {
     this.finishedGames = [];
     this.gameCount = 0;
   }
-
   function TestGame() {
     this.winner = null;
     this.movesCount = 0;
@@ -20,7 +16,6 @@ describe("master", function() {
   TestGame.prototype.newSquares = function() {
     Board.prototype.newSquares.call(this)
   }
-
   MasterTest.prototype = {
     main: function(game) {
       var gameFinished, openSquares, copies = [];
@@ -111,37 +106,38 @@ describe("master", function() {
         return [1, place];
       }
     },
-
     coordsToArr: function(coordsInt) {
       var arr = String(coordsInt).split('');
       return [parseInt(arr[0]), parseInt(arr[1])];
     }
   }
 
+  var masterTest = new MasterTest();
+  var testGame = new TestGame();
+  testGame.newSquares()
+  // var testGameSquares = {
+    // '1,1': 'master',
+    // '1,2': null,
+    // '1,3': null,
+    // '2,1': 'player',
+    // '2,2': 'master',
+    // '2,3': null,
+    // '3,1': 'player',
+    // '3,2': 'master',
+    // '3,3': 'player'
+  // }
+  // testGame.movesCount = 6;
+  // testGame.squares = testGameSquares;
 
-
-
-    var masterTest = new MasterTest();
-    var testGame = new TestGame();
-    testGame.newSquares()
-    var testGameSquares = {
-      '1,1': 'master',
-      '1,2': null,
-      '1,3': null,
-      '2,1': 'player',
-      '2,2': 'master',
-      '2,3': null,
-      '3,1': 'player',
-      '3,2': 'master',
-      '3,3': 'player'
-    }
-    // testGame.movesCount = 6;
-    // testGame.squares = testGameSquares;
+  // console.dir(masterTest.finishedGames)
     masterTest.main(testGame)
-    console.dir(masterTest.finishedGames)
-    // console.log(testGame)
 
 
+
+  it("should never lose given all combinations of player moves", function() {
+
+
+  });
 
 
     // describe("move", function() {
