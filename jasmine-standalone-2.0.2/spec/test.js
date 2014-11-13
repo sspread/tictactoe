@@ -4,7 +4,6 @@ describe("master", function() {
   var master = new Master(board)
 
   function MasterTest(board) {
-    // this.squares = board
     this.finishedGames = [];
     this.gameCount = 0;
   }
@@ -24,8 +23,6 @@ describe("master", function() {
 
   MasterTest.prototype = {
     main: function(game) {
-      this.gameCount = this.finishedGames.length
-      if (this.gameCount.length > 10) return;
       var gameFinished, openSquares, copies = [];
       gameFinished = this.checkStatus(game)
       if (!gameFinished) {
@@ -59,23 +56,25 @@ describe("master", function() {
       var masterMoveCoords;
       masterMoveCoords = master.move()
       game.squares[masterMoveCoords] = "master"
+      game.movesCount += 1;
       this.main(game)
     },
     iterateOpenSquares: function(openSquares, game) {
       var i, copyBoard, newGame, copies = [];
       for (i = 0; i < openSquares.length; i++) {
         newGame = new TestGame();
-        newGame = this.movePlayerToCoord(newGame, openSquares[i])
+        newGame = this.movePlayerToCoord(game, newGame, openSquares[i])
         copies.push(newGame)
       }
       return copies
     },
-    movePlayerToCoord: function(game, coord) {
+    movePlayerToCoord: function(game, newGame, coord) {
       copyBoard = $.extend(true, {}, game.squares)
-      game.squares = copyBoard
-      game.squares[coord] = 'player'
-      game.movesCount += 1;
-      return game
+      newGame.squares = copyBoard
+      newGame.squares[coord] = 'player'
+      newGame.movesCount = game.movesCount
+      newGame.movesCount += 1;
+      return newGame
     },
     getOpenSquares: function(game) {
       var openSquares = [], coords;
@@ -90,11 +89,13 @@ describe("master", function() {
       var winningLocation, parsedLocation;
       winningLocation = game.getWinningLocation(["player", "master"]);
       if (winningLocation) {
+        this.gameCount +=1
         parsedLocation = this.parseLocation(winningLocation);
         game.winner = game.squares[parsedLocation];
         this.finishedGames.push(game);
         return true
       } else if (game.movesCount > 8) {
+        this.gameCount +=1;
         game.winner = "draw";
         this.finishedGames.push(game);
         return true
@@ -120,26 +121,28 @@ describe("master", function() {
 
 
 
-
-  // testCopy = $.extend(true, {}, testGame)
-  describe("Master", function() {
     var masterTest = new MasterTest();
     var testGame = new TestGame();
     testGame.newSquares()
+    var testGameSquares = {
+      '1,1': 'master',
+      '1,2': null,
+      '1,3': null,
+      '2,1': 'player',
+      '2,2': 'master',
+      '2,3': null,
+      '3,1': 'player',
+      '3,2': 'master',
+      '3,3': 'player'
+    }
+    // testGame.movesCount = 6;
+    // testGame.squares = testGameSquares;
     masterTest.main(testGame)
-    console.log(masterTest.finishedGames)
+    console.dir(masterTest.finishedGames)
+    // console.log(testGame)
 
-    // console.log(masterTest.games)
-    // var badArr = []
-    // masterTeset.masterArray
-    // for (var run in masterTest.masterHash) {
-      // console.log(masterHash[run])
-    // }
-    // for (var run in bigHash) {
-      // console.log(bigHash[run])
-    // }
-    // console.log(bigHash)
-    // console.log()
+
+
 
     // describe("move", function() {
     //   var move;
@@ -162,5 +165,4 @@ describe("master", function() {
     //   });
     // });
 
-  });
 });

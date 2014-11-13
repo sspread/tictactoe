@@ -7,7 +7,6 @@ Master.prototype = {
     return this.board.squares;
   },
   move: function() {
-    // console.log(this.squares())
     var moveFunctions, i, currentCheck;
     moveFunctions = [
       this.checkRows,
