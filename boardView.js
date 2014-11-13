@@ -17,10 +17,12 @@ BoardView.prototype = {
   },
   showPlayerMove: function(clicked) {
     $(clicked).html("<i class = 'player fa fa-times fa-4x'></i>");
+    $(clicked).addClass('occupied')
   },
   showMasterMove: function(coords) {
     var square = $(this.el).find("#"+coords);
     $(square).html("<i class = 'master fa fa-circle-o fa-4x'></i>");
+    $(square).addClass('occupied')
   },
   showWinningLocation: function(winningArr) {
     var id, board = this;
@@ -31,12 +33,14 @@ BoardView.prototype = {
   },
   showWinner: function(winner) {
     var capitalizeWinner = winner.charAt(0).toUpperCase() + winner.slice(1);
-    $("#game").append("<div class = 'winner'>"+capitalizeWinner+" wins!</div>");
+    this.el.find('td').addClass('over')
+    this.el.append("<div class = 'winner'>"+capitalizeWinner+" wins!</div>");
   },
   showDraw: function() {
-    $("#game").append("<div class = 'winner'>Draw!</div>");
+    this.el.find('td').addClass('over')
+    this.el.append("<div class = 'winner'>Draw!</div>");
   },
   showPlayButton: function() {
-    $(".winner").append("<div class = 'again'>Again?</div>");
+    this.el.find(".winner").append("<div class = 'again'>Again?</div>");
   },
 };

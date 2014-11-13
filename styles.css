@@ -34,7 +34,10 @@ td:nth-child(even) {
   color: red;
 }
 td:hover{
-  background-color: #ddd;
+  background-color: #DDD;
+}
+.occupied:hover, td.over:hover{
+  background-color: #FFF;
 }
 .again{
   margin: 20px auto;

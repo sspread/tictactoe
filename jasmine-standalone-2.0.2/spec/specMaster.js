@@ -113,21 +113,23 @@ describe("Master", function() {
               break; 
           }
         }
-        breakdown.master = master
-        breakdown.player = player
-        breakdown.draw = draw
-        return breakdown
+        breakdown.master = master;
+        breakdown.player = player;
+        breakdown.draw = draw;
+        return breakdown;
       }
     }
 
-  var masterTest, testGame, results;
-  masterTest = new MasterTest();
-  testGame = new TestGame();
-  testGame.newSquares();
-  masterTest.main(testGame)
-  results = masterTest.parseFinishedGames();
-  // console.dir(results)
-  expect(results.player.length).toEqual(0);
+    var masterTest, testGame, results;
+    masterTest = new MasterTest();
+    testGame = new TestGame();
+    testGame.newSquares();
+    masterTest.main(testGame);
+    results = masterTest.parseFinishedGames();
+    expect(results.player.length).toEqual(0);
+
+    // Print results of all possible board playouts.
+    console.dir(results)
 
   });
 
@@ -138,54 +140,54 @@ describe("Master", function() {
     board.newSquares();
     beforeEach(function() {board.newSquares();})
     it("returns center coords when player's first move is not center", function() {
-      board.squares[[1,2]] = "player"
+      board.squares[[1,2]] = "player";
       move = master.move();
       expect(move).toEqual([2,2]);
     });
     it("returns first corner coords when player's first move is center", function() {
-      board.squares[[2,2]] = "player"
-      move = master.move()
+      board.squares[[2,2]] = "player";
+      move = master.move();
       expect(move).toEqual([1,1]);
     });
     it("blocks player from taking row", function() {
-      board.squares[[2,1]] = "player"
-      board.squares[[2,2]] = "player"
+      board.squares[[2,1]] = "player";
+      board.squares[[2,2]] = "player";
       move = master.move()
       expect(move).toEqual([2,3]);
     });
     it("blocks player from taking column", function() {
-      board.squares[[1,1]] = "player"
-      board.squares[[2,1]] = "player"
-      move = master.move()
+      board.squares[[1,1]] = "player";
+      board.squares[[2,1]] = "player";
+      move = master.move();
       expect(move).toEqual([3,1]);
     });
     it("blocks player from taking diagonal", function() {
-      board.squares[[3,1]] = "player"
-      board.squares[[2,2]] = "player"
+      board.squares[[3,1]] = "player";
+      board.squares[[2,2]] = "player";
       move = master.move()
       expect(move).toEqual([1,3]);
     });
     it("takes correct corner to avoid trap", function() {
-      board.squares[[2,3]] = "player"
-      board.squares[[3,2]] = "player"
-      board.squares[[2,2]] = "master"
-      move = master.move()
+      board.squares[[2,3]] = "player";
+      board.squares[[3,2]] = "player";
+      board.squares[[2,2]] = "master";
+      move = master.move();
       expect(move).toEqual([1,3]);
     });
     it("correctly takes a side to avoid opposite corners trap", function() {
-      board.squares[[1,3]] = "player"
-      board.squares[[3,1]] = "player"
-      board.squares[[2,2]] = "master"
-      move = master.move()
+      board.squares[[1,3]] = "player";
+      board.squares[[3,1]] = "player";
+      board.squares[[2,2]] = "master";
+      move = master.move();
       expect(move).toEqual([1,2]);
     });
     it("correctly skips block and goes for win if available", function() {
-      board.squares[[1,1]] = "player"
-      board.squares[[1,3]] = "player"
-      board.squares[[2,2]] = "master"
-      board.squares[[1,2]] = "master"
-      board.squares[[3,1]] = "player"
-      move = master.move()
+      board.squares[[1,1]] = "player";
+      board.squares[[1,3]] = "player";
+      board.squares[[2,2]] = "master";
+      board.squares[[1,2]] = "master";
+      board.squares[[3,1]] = "player";
+      move = master.move();
       expect(move).toEqual([3,2]);
     });
   });

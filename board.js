@@ -14,7 +14,7 @@ Board.prototype = {
     this.squares[coords] = value;
   },
   checkIfEmpty: function(coords) {
-    return this.squares[coords] === null
+    return this.squares[coords] === null;
   },
   corners: function() {
     var arr = [], r, c;
@@ -66,7 +66,7 @@ Board.prototype = {
           }
         }
         if (rows[r].length === 3) {
-          return rows[r]
+          return rows[r];
         }
       }
     }
@@ -85,7 +85,7 @@ Board.prototype = {
           }
         }
         if (cols[c].length === 3) {
-          return cols[c]
+          return cols[c];
         }
       }
     }
@@ -102,11 +102,11 @@ Board.prototype = {
         for (i = 0; i < corners.slice(0,2).length; i++) {
           opposite = this.oppositeCorner(corners[i]);
           if (squares[[2,2]] === squares[corners[i]] && squares[[2,2]] === squares[opposite]) {
-            return [corners[i],[2,2],opposite];
+            return [corners[i], [2,2], opposite];
           }
         }      
       }
     }
     return false;
-  },
+  }
 };
