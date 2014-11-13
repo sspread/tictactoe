@@ -10,7 +10,7 @@ describe("Game", function() {
   it("has a board model", function () {
     expect(game.board).toEqual(board)
   });
-  it("has a view model", function () {
+  it("has a view", function () {
     expect(game.boardView).toEqual(boardView)
   });
   it("has a master model", function () {
@@ -18,9 +18,11 @@ describe("Game", function() {
   });
 
   describe("movePlayer", function() {
+    var click;
     jasmine.clock().install()
-    var click = $.Event("click", {delegateTarget: $("<td id ='12'></td>")[0] });
+    click = $.Event("click", {delegateTarget: $("<td id ='12'></td>")[0] });
     beforeEach(function() {game.resetGame();})
+    
     it("updates board to reflect move coordinates", function() {
       game.movePlayer(click)
       expect(game.board.squares[[1,2]]).toEqual('player');
@@ -75,5 +77,4 @@ describe("Game", function() {
       expect(game.gameOver).toEqual(true)
     })
   });
-
 });

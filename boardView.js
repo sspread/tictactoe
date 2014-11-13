@@ -22,34 +22,12 @@ BoardView.prototype = {
     var square = $(this.el).find("#"+coords);
     $(square).html("<i class = 'master fa fa-circle-o fa-4x'></i>");
   },
-  showWinningLocation: function(params) {
-    var board = this,
-    winningStripe = this.getWinningArr(params);
-    $.each(winningStripe, function(index, value) {
-      $(board.el).find("#"+value).addClass('win-square');
+  showWinningLocation: function(winningArr) {
+    var id, board = this;
+    $.each(winningArr, function(index, value) {
+      id = '#'+value.join('');
+      $(board.el).find(id).addClass('win-square');
     });
-  },
-  getWinningArr: function(params) {
-    var type = params.orientation,
-    place = params.number,
-    arr = [], id, i;
-    if (type === 'row') {
-      for (i = 1; i <=3; i++) {
-        id = place+i;
-        arr.push(id);
-      }
-    } else if (type === 'col') {
-      for (i = 1; i <=3; i++) {
-        id = i+place;
-        arr.push(id);
-      }
-    } else if (type === 'diag') {
-      for (i = 1; i <=3; i++) {
-        id = i+String(place+(i-1)*(2-place));
-        arr.push(id);
-      }
-    }
-    return arr;
   },
   showWinner: function(winner) {
     var capitalizeWinner = winner.charAt(0).toUpperCase() + winner.slice(1);

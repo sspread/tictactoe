@@ -13,7 +13,7 @@ describe("Master", function() {
     TestGame.prototype.newSquares = function() {
       Board.prototype.newSquares.call(this)
     }
-    
+
     function MasterTest() {
       this.finishedGames = [];
       this.gameCount = 0;
@@ -87,8 +87,7 @@ describe("Master", function() {
         winningLocation = game.getWinningLocation(["player", "master"]);
         if (winningLocation) {
           this.gameCount +=1
-          parsedLocation = this.parseLocation(winningLocation);
-          game.winner = game.squares[parsedLocation];
+          game.winner = game.squares[winningLocation[0]];
           this.finishedGames.push(game);
           return true
         } else if (game.movesCount > 8) {
@@ -98,19 +97,6 @@ describe("Master", function() {
           return true
         }
         return false
-      },
-      parseLocation: function(params) {
-        var type = params.orientation;
-        var place = params.number;
-        if (type === 'row') {
-          return [place, 1];
-        } else if (type === 'col' || type === 'diag') {
-          return [1, place];
-        }
-      },
-      coordsToArr: function(coordsInt) {
-        var arr = String(coordsInt).split('');
-        return [parseInt(arr[0]), parseInt(arr[1])];
       },
       parseFinishedGames: function() {
         var breakdown = {}, master = [], player = [], draw = [], game;

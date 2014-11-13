@@ -59,8 +59,7 @@ Game.prototype = {
   },
   treatWinner: function(winningLocation) {
     this.gameOver = true;
-    parsedLocation = this.parseLocation(winningLocation);
-    winner = this.board.squares[parsedLocation];
+    winner = this.board.squares[winningLocation[0]];
     this.boardView.showWinner(winner);
     this.boardView.showWinningLocation(winningLocation);
     this.boardView.showPlayButton();
@@ -69,15 +68,6 @@ Game.prototype = {
     this.gameOver = true;
     this.boardView.showDraw();
     this.boardView.showPlayButton();    
-  },
-  parseLocation: function(params) {
-    var type = params.orientation;
-    var place = params.number;
-    if (type === 'row') {
-      return [place, 1];
-    } else if (type === 'col' || type === 'diag') {
-      return [1, place];
-    }
   },
   coordsToArr: function(coordsInt) {
     var arr = String(coordsInt).split('');

@@ -62,13 +62,11 @@ Board.prototype = {
         rows[r] = [];
         for (key in squares) {
           if (parseInt(key[0]) === r && squares[key] === players[i]) {
-            rows[r].push(parseInt(key[2]));
+            rows[r].push([r,parseInt(key[2])]);
           }
         }
-        for (key in rows) {
-          if (rows[key].length === 3) {
-            return {orientation: 'row', number: key};
-          }
+        if (rows[r].length === 3) {
+          return rows[r]
         }
       }
     }
@@ -83,20 +81,18 @@ Board.prototype = {
         cols[c] = [];
         for (key in squares) {
           if (parseInt(key[2]) === c && squares[key] === players[i]) {
-            cols[c].push(parseInt(key[0]));
+            cols[c].push([parseInt(key[0]),c]);
           }
         }
-        for (key in cols) {
-          if (cols[key].length === 3) {
-            return {orientation: 'col', number: key};
-          }
+        if (cols[c].length === 3) {
+          return cols[c]
         }
       }
     }
     return false;
   },
   getWinningDiagonal: function(players) {
-    var i, squares, corners;
+    var i, squares, corners, opposite;
     for (i = 0; i < players.length; i++) {
       squares = this.squares;
       if (!squares[[2,2]]) {
@@ -104,8 +100,9 @@ Board.prototype = {
       } else {
         corners = this.corners();
         for (i = 0; i < corners.slice(0,2).length; i++) {
-          if (squares[[2,2]] === squares[corners[i]] && squares[[2,2]] === squares[this.oppositeCorner(corners[i])]) {
-            return {orientation: 'diag', number: corners[i][1]};
+          opposite = this.oppositeCorner(corners[i]);
+          if (squares[[2,2]] === squares[corners[i]] && squares[[2,2]] === squares[opposite]) {
+            return [corners[i],[2,2],opposite];
           }
         }      
       }
