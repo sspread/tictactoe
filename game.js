@@ -26,7 +26,6 @@ Game.prototype = {
       }.bind(this), 270);
     }
   },
-
   resetGame: function() {
     this.board.newSquares();
     this.boardView.renderNew();
@@ -36,6 +35,7 @@ Game.prototype = {
     this.play();
   },
   moveMaster: function() {
+    console.log("Master called")
     if (!this.gameOver) {
       var masterMoveCoords = this.master.move().join('');
       this.board.updateSquares(this.coordsToArr(masterMoveCoords), "master");
@@ -52,15 +52,18 @@ Game.prototype = {
       winningLocation = this.board.getWinningLocation(players);
     }
     if (winningLocation) {
-      this.gameOver = true;
-      parsedLocation = this.parseLocation(winningLocation);
-      winner = this.board.squares[parsedLocation];
-      this.boardView.showWinner(winner);
-      this.boardView.showWinningLocation(winningLocation);
-      this.boardView.showPlayButton();
+      this.treatWinner(winningLocation);
     } else if (this.moves >= 9) {
       this.executeDraw();
     }
+  },
+  treatWinner: function(winningLocation) {
+    this.gameOver = true;
+    parsedLocation = this.parseLocation(winningLocation);
+    winner = this.board.squares[parsedLocation];
+    this.boardView.showWinner(winner);
+    this.boardView.showWinningLocation(winningLocation);
+    this.boardView.showPlayButton();
   },
   executeDraw: function() {
     this.gameOver = true;
@@ -76,7 +79,6 @@ Game.prototype = {
       return [1, place];
     }
   },
-
   coordsToArr: function(coordsInt) {
     var arr = String(coordsInt).split('');
     return [parseInt(arr[0]), parseInt(arr[1])];
