@@ -1,22 +1,21 @@
 function Board() {
   this.squares = {};
 }
-
 Board.prototype = {
-  updateSquares: function(coords, value) {
-    this.squares[coords] = value;
-  },
-  checkIfEmpty: function(coords) {
-    coords = coords.join(',');
-    for (var square in this.squares) {
-      if (coords === square) {
-        return false;
+  newSquares: function(){
+    var r, c;
+    for (r = 1; r <= 3; r++) {
+      for (c = 1; c <= 3; c++) {
+        this.squares[[r,c]] = null;
       }
     }
-    return true;
+    },
+  updateSquares: function(coords, value) {
+    this.squares[coords] = value;
+    console.log(this.squares)
   },
-  clearSquares: function() {
-    this.squares = {};
+  checkIfEmpty: function(coords) {
+    return this.squares[coords] === null
   },
   corners: function() {
     var arr = [], r, c;

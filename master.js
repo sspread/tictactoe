@@ -3,11 +3,11 @@ function Master(board) {
 }
 
 Master.prototype = {
-
   squares: function() {
     return this.board.squares;
   },
   move: function() {
+    // console.log(this.squares())
     var moveFunctions, i, currentCheck;
     moveFunctions = [
       this.checkRows,
@@ -15,7 +15,7 @@ Master.prototype = {
       this.checkDiagonals,
       this.checkOppositeCorners,
       this.checkDangerCorners,
-      this.findOpenCorner,
+      this.findCorner,
       this.findOpenSquare
     ];
     for (i = 0; i < moveFunctions.length; i++) {
@@ -40,7 +40,7 @@ Master.prototype = {
     for (r = 1; r <= 3; r++) {
       rows[r] = [];
       for (key in this.squares()) {
-        if (parseInt(key[0]) === r) {
+        if (this.squares()[key] && parseInt(key[0]) === r) {
           rows[r].push(parseInt(key[2]));
         }
       }
@@ -50,9 +50,9 @@ Master.prototype = {
         if (this.squares()[[key,rows[key][0]]] === this.squares()[[key,rows[key][1]]]) {
           if (this.squares()[[key,rows[key][0]]] === "master") {
             missingCol = this.findMissingCoord(rows[key]);
-            return [key, missingCol];
+            return [parseInt(key), missingCol];
           } else {
-            tempKey = key;
+            tempKey = parseInt(key);
           }
         }
       }
@@ -67,7 +67,7 @@ Master.prototype = {
     for (c = 1; c <= 3; c++) {
       cols[c] = [];
       for (key in this.squares()) {
-        if (parseInt(key[2]) === c) {
+        if (this.squares()[key] && parseInt(key[2]) === c) {
           cols[c].push(parseInt(key[0]));
         }
       }
@@ -77,9 +77,9 @@ Master.prototype = {
         if (this.squares()[[cols[key][0],key]] === this.squares()[[cols[key][1],key]]) {
           if (this.squares()[[cols[key][0],key]] === "master") {
             missingRow = this.findMissingCoord(cols[key]);
-            return [missingRow, key];
+            return [missingRow, parseInt(key)];
           } else {
-            tempKey = key;
+            tempKey = parseInt(key);
           }
         }
       }
@@ -117,10 +117,12 @@ Master.prototype = {
       return [2,2];
     }
   },
-  findOpenCorner: function() {
-    var corners = this.board.corners(), i;
+  findCorner: function() {
+    var corners = this.board.corners(), i, neighborSideValue, neighborSideValue2;
     for (i = 0; i < corners.length; i++) {
-      if (!this.squares()[corners[i]]) {
+      neighborSideValue = this.squares()[this.board.sides()[i]]
+      neighborSideValue2 = this.squares()[this.board.sides()[i+1]]
+      if (!this.squares()[corners[i]] && neighborSideValue && neighborSideValue2) {
         return corners[i];
       }
     }

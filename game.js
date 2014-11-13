@@ -12,7 +12,6 @@ Game.prototype = {
     this.boardView.el.on('click', '.again', this.resetGame.bind(this));
   },
   movePlayer: function(e) {
-    console.log(this.boardView.el)
     var coords, squareEmpty;
     coords = this.coordsToArr(e.delegateTarget.id);
     squareEmpty = this.board.checkIfEmpty(coords);
@@ -29,7 +28,7 @@ Game.prototype = {
   },
 
   resetGame: function() {
-    this.board.clearSquares();
+    this.board.newSquares();
     this.boardView.renderNew();
     this.playerTurn = true;
     this.gameOver = false;
@@ -38,7 +37,7 @@ Game.prototype = {
   },
   moveMaster: function() {
     if (!this.gameOver) {
-      var masterMoveCoords = this.master.move(this.board.squares).join('');
+      var masterMoveCoords = this.master.move().join('');
       this.board.updateSquares(this.coordsToArr(masterMoveCoords), "master");
       this.boardView.showMasterMove(masterMoveCoords);
       this.moves += 1;
@@ -59,7 +58,7 @@ Game.prototype = {
       this.boardView.showWinner(winner);
       this.boardView.showWinningLocation(winningLocation);
       this.boardView.showPlayButton();
-    } else if (this.moves >= 8) {
+    } else if (this.moves >= 9) {
       this.executeDraw();
     }
   },
