@@ -9,7 +9,7 @@ Board.prototype = {
         this.squares[[r,c]] = null;
       }
     }
-    },
+  },
   updateSquares: function(coords, value) {
     this.squares[coords] = value;
     console.log(this.squares)

@@ -1,32 +1,15 @@
-describe("game", function() {
+describe("master", function() {
   var board =  new Board()
   board.newSquares();
   var master = new Master(board)
-  var boardView = new BoardView()
-  boardView.renderNew();
-  var game = new Game({board: board, master: master, boardView: boardView})
-  game.play();
 
   function MasterTest(board) {
-    this.squares = board
-    this.masterArray = [];
+    // this.squares = board
+    this.finishedGames = [];
     this.gameCount = 0;
   }
 
-
   function TestGame() {
-    this.squares = {
-      '1,1': null,
-      '1,2': null,
-      '1,3': null,
-      '2,1': null,
-      '2,2': null,
-      '2,3': null,
-      '3,1': null,
-      '3,2': null,
-      '3,3': null
-    };
-    this.gameNumber = 0;
     this.winner = null;
     this.movesCount = 0;
   }
@@ -35,83 +18,118 @@ describe("game", function() {
   TestGame.prototype.getWinningLocation = function(players) {
     return Board.prototype.getWinningLocation.call(this, players)
   }
+  TestGame.prototype.newSquares = function() {
+    Board.prototype.newSquares.call(this)
+  }
 
   MasterTest.prototype = {
-  updateMasterArray: function(board, winner) {
-    this.masterArray.push({game: this.gameCount, gameBoard: board, winner: winner});
-  },
-
-  gameLoop: function(testGame, playerMove) {
-    var key, masterMoveCoords, winningLocation, winner, boardState;
-    testGame.squares[playerMove] = "player";
-    testGame.movesCount += 1;
-   
-    winningLocation = testGame.getWinningLocation(['player','master'])
-    if (winningLocation) {
-      this.treatWinner(testGame, winningLocation);
-    } else if (testGame.movesCount > 8) {
-      this.draw(testGame, winningLocation)
-    }
-
-    var master = new Master(testGame)
-    masterMoveCoords = master.move();
-    testGame.squares[masterMoveCoords] = "master";
-    testGame.movesCount += 1;
-
-    winningLocation = testGame.getWinningLocation(['player','master'])
-      // console.log(winningLocation)
-    if (winningLocation) {
-      this.treatWinner(testGame, winningLocation);
-    } else if (testGame.movesCount > 8) {
-      this.draw(testGame, winningLocation)
-    }
-    this.gameCombos(testGame, i+=1);
-  },
-
-  treatWinner: function(testGame, winningLocation) {
-      parsedLocation = game.parseLocation(winningLocation)
-      winner = testGame.squares[parsedLocation];
-      testGame.winner = winner;
-      this.gameCount += 1;
-      testGame.gameNumber = this.gameCount
-      testCopy = $.extend(true, {}, testGame)
-      this.masterArray.push(testCopy)
-      testGame = new TestGame();
-      this.gameCombos(testGame);
-  }, 
-  draw: function(testGame, winningLocation) {
-    console.log("DRAW")
-      this.gameCount += 1;
-      testGame.gameNumber = this.gameCount
-      testGame.winner = "draw";
-      testCopy = $.extend(true, {}, testGame)
-      this.masterArray.push(tesCopy)
-      testGame = new TestGame();
-      this.gameCombos(testGame);
-  },
-  gameCombos: function(testGame, i) {
-    console.log(i)
-    if (typeof(i)==='undefined') i = 0;
-    if (i > 8) i = 0;
-    if (this.gameCount > 10) return;
-    var coords = Object.keys(testGame.squares);
-    for (i; i < coords; i++) {
-      if (testGame.squares[coords[i]] === null) {
-        this.gameLoop(testGame, coords[i]);
-        break
+    main: function(game) {
+      this.gameCount = this.finishedGames.length
+      if (this.gameCount.length > 10) return;
+      var gameFinished, openSquares, copies = [];
+      gameFinished = this.checkStatus(game)
+      if (!gameFinished) {
+        openSquares = this.getOpenSquares(game)
+      } else {
+        return;
       }
+      copies = this.iterateOpenSquares(openSquares, game);
+      this.processCopies(copies);
+    },
+    processCopies: function(games) {
+      var i, gameFinished;
+      for (i = 0; i < games.length; i++) {
+        gameFinished = this.checkStatus(games[i])
+        if (!gameFinished) {
+          this.createNewMaster(games[i])
+        } else {
+          return
+        }
+      }
+    },
+    createNewMaster: function(game) {
+      var copyBoard, newMaster, newBoard;
+      copyBoard = $.extend(true, {}, game.squares)
+      newBoard = new Board();
+      newBoard.squares = copyBoard;
+      newMaster = new Master(newBoard);
+      this.moveMaster(game, newMaster)
+    },
+    moveMaster: function(game, master) {
+      var masterMoveCoords;
+      masterMoveCoords = master.move()
+      game.squares[masterMoveCoords] = "master"
+      this.main(game)
+    },
+    iterateOpenSquares: function(openSquares, game) {
+      var i, copyBoard, newGame, copies = [];
+      for (i = 0; i < openSquares.length; i++) {
+        newGame = new TestGame();
+        newGame = this.movePlayerToCoord(newGame, openSquares[i])
+        copies.push(newGame)
+      }
+      return copies
+    },
+    movePlayerToCoord: function(game, coord) {
+      copyBoard = $.extend(true, {}, game.squares)
+      game.squares = copyBoard
+      game.squares[coord] = 'player'
+      game.movesCount += 1;
+      return game
+    },
+    getOpenSquares: function(game) {
+      var openSquares = [], coords;
+      for (coords in game.squares) {
+        if (game.squares[coords] === null) {
+          openSquares.push(coords);
+        }
+      }
+      return openSquares;
+    },
+    checkStatus: function(game) {
+      var winningLocation, parsedLocation;
+      winningLocation = game.getWinningLocation(["player", "master"]);
+      if (winningLocation) {
+        parsedLocation = this.parseLocation(winningLocation);
+        game.winner = game.squares[parsedLocation];
+        this.finishedGames.push(game);
+        return true
+      } else if (game.movesCount > 8) {
+        game.winner = "draw";
+        this.finishedGames.push(game);
+        return true
+      }
+      return false
+    },
+    parseLocation: function(params) {
+      var type = params.orientation;
+      var place = params.number;
+      if (type === 'row') {
+        return [place, 1];
+      } else if (type === 'col' || type === 'diag') {
+        return [1, place];
+      }
+    },
+
+    coordsToArr: function(coordsInt) {
+      var arr = String(coordsInt).split('');
+      return [parseInt(arr[0]), parseInt(arr[1])];
     }
-  this.gameCombos(testGame, i+=1);
   }
-}
 
+
+
+
+
+  // testCopy = $.extend(true, {}, testGame)
   describe("Master", function() {
-    var masterTest = new MasterTest(board);
+    var masterTest = new MasterTest();
     var testGame = new TestGame();
-    // console.log(board.squares)
+    testGame.newSquares()
+    masterTest.main(testGame)
+    console.log(masterTest.finishedGames)
 
-    masterTest.gameCombos(testGame);
-    console.log(masterTest.masterArray)
+    // console.log(masterTest.games)
     // var badArr = []
     // masterTeset.masterArray
     // for (var run in masterTest.masterHash) {
