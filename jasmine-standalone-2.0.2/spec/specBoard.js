@@ -31,6 +31,29 @@ describe('Board', function() {
   });
 
   describe('getWinningLocation', function() {
-    it('should return ')
-  })
+    beforeEach(function() {board.newSquares();})
+    var players = ['player', 'master'];
+
+    it('should return winning row array of coordinates', function() {
+      board.squares[[1,1]] = 'master';
+      board.squares[[1,2]] = 'master';
+      board.squares[[1,3]] = 'master';
+      board.squares[[2,2]] = 'player';
+      expect(board.getWinningLocation(players)).toEqual([[1,1], [1,2], [1,3]]);
+    });
+    it('should return winning column array of coordinates', function() {
+      board.squares[[1,2]] = 'master';
+      board.squares[[2,2]] = 'master';
+      board.squares[[3,2]] = 'master';
+      board.squares[[2,3]] = 'player';
+      expect(board.getWinningLocation(players)).toEqual([[1,2], [2,2], [3,2]]);
+    });
+    it('should return winning diagonal array of coordinates', function() {
+      board.squares[[1,3]] = 'master';
+      board.squares[[2,2]] = 'master';
+      board.squares[[3,1]] = 'master';
+      board.squares[[2,3]] = 'player';
+      expect(board.getWinningLocation(players)).toEqual([[1,3], [2,2], [3,1]]);
+    });
+  });
 });
