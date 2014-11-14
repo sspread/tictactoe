@@ -24,7 +24,7 @@ Game.prototype = {
       this.checkWinner();
       setTimeout(function() {
         this.moveMaster();
-      }.bind(this), 270);
+      }.bind(this), 130);
     }
   },
   resetGame: function() {

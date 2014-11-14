@@ -54,12 +54,10 @@ BoardView.prototype = {
     var capitalizeWinner = winner.charAt(0).toUpperCase() + winner.slice(1);
     this.el.find('td').addClass('over')
     this.el.append("<div class = 'message'>"+capitalizeWinner+" wins!</div>");
-    $('#board').animate({opacity: 0.20}, 4000);
   },
   showDraw: function() {
     this.el.find('td').addClass('over')
     this.el.append("<div class = 'message'>Draw!</div>");
-    $('#board').animate({opacity: 0.20}, 4000);
   },
   showPlayButton: function() {
     this.el.find(".message").append("<div class = 'again'>Again?</div>");
