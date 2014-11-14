@@ -19,6 +19,25 @@ BoardView.prototype = {
     $(clicked).html("<i class = 'player fa fa-times fa-4x'></i>");
     $(clicked).addClass('occupied')
   },
+  showBeginMessage: function() {
+    var messages, message, randindex;
+    messages = [
+      "Go ahead!",
+      "Giddy up!",
+      "After you!",
+      "Good luck!",
+      "You can do it!",
+      "For the win!",
+      "Go for it!",
+      "You got this!"
+    ];
+    randindex = Math.floor(Math.random() * messages.length);
+    message = messages[randindex]
+    this.el.append("<div class = 'message'>" + message + "</div>");
+  },
+  hideBeginMessage: function() {
+    this.el.find('.message').remove();
+  },
   showMasterMove: function(coords) {
     var square = $(this.el).find("#"+coords);
     $(square).html("<i class = 'master fa fa-circle-o fa-4x'></i>");
@@ -34,13 +53,13 @@ BoardView.prototype = {
   showWinner: function(winner) {
     var capitalizeWinner = winner.charAt(0).toUpperCase() + winner.slice(1);
     this.el.find('td').addClass('over')
-    this.el.append("<div class = 'winner'>"+capitalizeWinner+" wins!</div>");
+    this.el.append("<div class = 'message'>"+capitalizeWinner+" wins!</div>");
   },
   showDraw: function() {
     this.el.find('td').addClass('over')
-    this.el.append("<div class = 'winner'>Draw!</div>");
+    this.el.append("<div class = 'message'>Draw!</div>");
   },
   showPlayButton: function() {
-    this.el.find(".winner").append("<div class = 'again'>Again?</div>");
+    this.el.find(".message").append("<div class = 'again'>Again?</div>");
   },
 };

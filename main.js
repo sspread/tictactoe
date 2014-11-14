@@ -5,4 +5,5 @@ $(function() {
   var boardView = new BoardView()
   boardView.renderNew();
   new Game({board: board, master: master, boardView: boardView}).play();
+  boardView.showBeginMessage();
 });

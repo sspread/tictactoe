@@ -16,6 +16,7 @@ Game.prototype = {
     coords = this.coordsToArr(e.delegateTarget.id);
     squareEmpty = this.board.checkIfEmpty(coords);
     if (!this.gameOver && this.playerTurn && squareEmpty) {
+      this.boardView.hideBeginMessage();
       this.moves += 1;
       this.playerTurn = false;
       this.board.updateSquares(coords, "player");
@@ -29,13 +30,13 @@ Game.prototype = {
   resetGame: function() {
     this.board.newSquares();
     this.boardView.renderNew();
+    this.boardView.showBeginMessage();
     this.playerTurn = true;
     this.gameOver = false;
     this.moves = 0;
     this.play();
   },
   moveMaster: function() {
-    console.log("Master called")
     if (!this.gameOver) {
       var masterMoveCoords = this.master.move().join('');
       this.board.updateSquares(this.coordsToArr(masterMoveCoords), "master");
