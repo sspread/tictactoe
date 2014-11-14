@@ -30,9 +30,7 @@ td:nth-child(even) {
   font-size: 2em;
   font-family: arial;
 }
-.win-square {
-  color: red;
-}
+
 td:hover{
   background-color: #DDD;
 }
@@ -44,10 +42,22 @@ td:hover{
   padding: 4px;
   font-size: .8em;
   width: 110px;
-  border: 2px solid black;
+  border: 2px solid ;
   border-radius: 8px;
   cursor: pointer;
 }
 .again:hover {
   background-color: #ddd;
+}
+i {
+  text-shadow: 3px 3px 7px #666;
+}
+/*.player {
+  color: #2C3D2B;
+}*/
+/*.master {*/
+  /*color: #382E2A;*/
+/*}*/
+.win-square {
+  color: #DB0E00;
 }
