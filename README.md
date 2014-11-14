@@ -1,6 +1,6 @@
 tictactoe
 =========
-Introducing the unbeaten []: "Tic_Tac_Toe Master"!
+Introducing the unbeaten [Tic_Tac_Toe Master](http://sspread.github.io/tictactoe/)!
 
 Featuring...
 
