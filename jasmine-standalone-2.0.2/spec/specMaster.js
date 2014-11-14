@@ -128,6 +128,7 @@ describe("Master", function() {
     results = masterTest.parseFinishedGames();
     expect(results.player.length).toEqual(0);
 
+    // MasterTest
     // Print results of all possible board playouts.
     console.dir(results)
 
